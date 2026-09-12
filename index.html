@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Generate Source Engine debug / missing-texture checkerboard PNGs entirely in your browser." />
+  <title>Source Missing Texture Generator</title>
+  <link rel="stylesheet" href="index.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true"></div>
+      <div>
+        <h1>Missing Texture Generator</h1>
+        <p class="subtitle">Source Engine debug / missing-texture checkerboard &rarr; PNG &middot; 100% client-side</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="layout">
+    <!-- ============ CONTROLS ============ -->
+    <section class="panel controls" aria-label="Generator settings">
+      <h2>Settings</h2>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="width">Width (px)</label>
+          <input type="number" id="width" min="8" max="8192" step="1" value="512" />
+        </div>
+        <div class="field">
+          <label for="height">Height (px)</label>
+          <input type="number" id="height" min="8" max="8192" step="1" value="512" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="cell">Checkerboard cell size (px)</label>
+        <input type="number" id="cell" min="1" max="8192" step="1" value="32" />
+      </div>
+
+      <div class="colors">
+        <div class="field">
+          <label for="colorA">Color A</label>
+          <div class="color-input">
+            <input type="color" id="colorA" value="#202020" aria-label="Color A picker" />
+            <input type="text" id="colorAHex" class="hex" value="#202020" spellcheck="false" autocomplete="off" aria-label="Color A hex" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="colorB">Color B</label>
+          <div class="color-input">
+            <input type="color" id="colorB" value="#ff00ff" aria-label="Color B picker" />
+            <input type="text" id="colorBHex" class="hex" value="#FF00FF" spellcheck="false" autocomplete="off" aria-label="Color B hex" />
+          </div>
+        </div>
+      </div>
+
+      <label class="check">
+        <input type="checkbox" id="swap" />
+        <span>Start with Color&nbsp;B in the top-left corner</span>
+      </label>
+
+      <label class="check">
+        <input type="checkbox" id="redx" />
+        <span>Overlay a red &ldquo;X&rdquo; (classic Source debug look)</span>
+      </label>
+
+      <div class="presets">
+        <span class="presets-label">Preset size</span>
+        <div class="btn-row">
+          <button class="btn small" data-preset="256" type="button">256</button>
+          <button class="btn small" data-preset="512" type="button">512</button>
+          <button class="btn small" data-preset="1024" type="button">1024</button>
+          <button class="btn small" data-preset="4096" type="button">4096</button>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn primary" id="download" type="button">&#11015; Download PNG</button>
+        <button class="btn" id="copy" type="button">&#128203; Copy to clipboard</button>
+        <button class="btn" id="reset" type="button">&#8634; Reset</button>
+      </div>
+    </section>
+
+    <!-- ============ PREVIEW ============ -->
+    <section class="panel preview" aria-label="Live preview">
+      <div class="preview-head">
+        <h2>Preview</h2>
+        <div class="readout">
+          <span id="readout" class="readout-item"></span>
+          <span id="sizeLabel" class="readout-item"></span>
+        </div>
+      </div>
+      <div class="canvas-wrap">
+        <canvas id="canvas" width="512" height="512" role="img" aria-label="Checkerboard preview"></canvas>
+      </div>
+      <p id="status" class="status" role="status" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <span>Pure front-end &middot; no server &middot; generated in your browser</span>
+  </footer>
+
+  <script src="index.js"></script>
+</body>
+</html>
+
