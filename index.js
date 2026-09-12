@@ -129,7 +129,7 @@
 
     const cols = Math.ceil(w / s);
     const rows = Math.ceil(h / s);
-    el.readout.textContent = w + "\u00d7" + h + " px \u2022 " + cols + "\u00d7" + rows + " cells";
+    el.readout.textContent = w + " \u00d7 " + h + " \u00b7 " + cols + " \u00d7 " + rows;
   }
 
   function drawRedX(ctx, w, h) {
@@ -152,11 +152,11 @@
   const updateSizeEstimate = debounce(function () {
     const { w, h } = getConfig();
     if (w * h > ESTIMATE_MAX_AREA) {
-      el.sizeLabel.textContent = "PNG: \u2014";
+      el.sizeLabel.textContent = "";
       return;
     }
     el.canvas.toBlob(function (blob) {
-      el.sizeLabel.textContent = "PNG \u2248 " + fmtBytes(blob ? blob.size : null);
+      el.sizeLabel.textContent = " \u00b7 " + fmtBytes(blob ? blob.size : null);
     }, "image/png");
   }, 350);
 
@@ -177,7 +177,6 @@
       a.click();
       a.remove();
       setTimeout(() => URL.revokeObjectURL(url), 1000);
-      el.sizeLabel.textContent = "PNG " + fmtBytes(blob.size);
       flash("Saved " + name, "ok");
     }, "image/png");
   }
@@ -188,14 +187,14 @@
       !("clipboard" in navigator) ||
       !("write" in navigator.clipboard)
     ) {
-      flash("Clipboard unavailable (needs a secure context: https / localhost).", "err");
+      flash("Clipboard unavailable (use https / localhost).", "err");
       return;
     }
     try {
       const blob = await new Promise((res) => el.canvas.toBlob(res, "image/png"));
       if (!blob) throw new Error("no blob");
       await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]);
-      flash("PNG copied to clipboard.", "ok");
+      flash("Copied to clipboard.", "ok");
     } catch (e) {
       flash("Copy failed: " + e.message, "err");
     }
@@ -211,11 +210,6 @@
     el.colorBHex.value = "#FF00FF";
     el.swap.checked = DEFAULTS.swap;
     el.redx.checked = DEFAULTS.redx;
-  }
-
-  function setPreset(size) {
-    el.width.value = size;
-    el.height.value = size;
   }
 
   /* ---------------- wiring ---------------- */
@@ -263,14 +257,7 @@
     el.reset.addEventListener("click", () => {
       applyDefaults();
       onInput();
-      flash("Reset to defaults.", "ok");
-    });
-
-    document.querySelectorAll("[data-preset]").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        setPreset(parseInt(btn.dataset.preset, 10));
-        onInput();
-      });
+      flash("Reset.", "ok");
     });
 
     applyDefaults();
@@ -284,4 +271,3 @@
     init();
   }
 })();
-

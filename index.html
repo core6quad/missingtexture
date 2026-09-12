@@ -2,108 +2,89 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Generate Source Engine debug / missing-texture checkerboard PNGs entirely in your browser." />
-  <title>Source Missing Texture Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="Generate Source Engine missing-texture checkerboard PNGs in your browser." />
+  <meta name="theme-color" content="#0e1013" />
+  <title>Missing Texture</title>
   <link rel="stylesheet" href="index.css" />
 </head>
 <body>
-  <header class="app-header">
-    <div class="brand">
-      <div class="brand-mark" aria-hidden="true"></div>
-      <div>
-        <h1>Missing Texture Generator</h1>
-        <p class="subtitle">Source Engine debug / missing-texture checkerboard &rarr; PNG &middot; 100% client-side</p>
+  <div class="app">
+    <header class="top">
+      <span class="mark" aria-hidden="true"></span>
+      <div class="titles">
+        <h1>Missing Texture</h1>
+        <p>Checkerboard PNG generator</p>
       </div>
-    </div>
-  </header>
+    </header>
 
-  <main class="layout">
-    <!-- ============ CONTROLS ============ -->
-    <section class="panel controls" aria-label="Generator settings">
-      <h2>Settings</h2>
-
-      <div class="field-row">
-        <div class="field">
-          <label for="width">Width (px)</label>
-          <input type="number" id="width" min="8" max="8192" step="1" value="512" />
-        </div>
-        <div class="field">
-          <label for="height">Height (px)</label>
-          <input type="number" id="height" min="8" max="8192" step="1" value="512" />
-        </div>
+    <section class="card" aria-label="Settings">
+      <div class="row">
+        <label class="field">
+          <span>Width</span>
+          <input type="number" id="width" inputmode="numeric" min="8" max="8192" step="1" value="512" />
+        </label>
+        <label class="field">
+          <span>Height</span>
+          <input type="number" id="height" inputmode="numeric" min="8" max="8192" step="1" value="512" />
+        </label>
       </div>
 
-      <div class="field">
-        <label for="cell">Checkerboard cell size (px)</label>
-        <input type="number" id="cell" min="1" max="8192" step="1" value="32" />
-      </div>
+      <label class="field">
+        <span>Cell size</span>
+        <input type="number" id="cell" inputmode="numeric" min="1" max="8192" step="1" value="32" />
+      </label>
 
-      <div class="colors">
+      <div class="row">
         <div class="field">
-          <label for="colorA">Color A</label>
-          <div class="color-input">
-            <input type="color" id="colorA" value="#202020" aria-label="Color A picker" />
+          <span>Color A</span>
+          <div class="pick">
+            <input type="color" id="colorA" value="#202020" aria-label="Color A" />
             <input type="text" id="colorAHex" class="hex" value="#202020" spellcheck="false" autocomplete="off" aria-label="Color A hex" />
           </div>
         </div>
         <div class="field">
-          <label for="colorB">Color B</label>
-          <div class="color-input">
-            <input type="color" id="colorB" value="#ff00ff" aria-label="Color B picker" />
+          <span>Color B</span>
+          <div class="pick">
+            <input type="color" id="colorB" value="#ff00ff" aria-label="Color B" />
             <input type="text" id="colorBHex" class="hex" value="#FF00FF" spellcheck="false" autocomplete="off" aria-label="Color B hex" />
           </div>
         </div>
       </div>
 
-      <label class="check">
-        <input type="checkbox" id="swap" />
-        <span>Start with Color&nbsp;B in the top-left corner</span>
-      </label>
-
-      <label class="check">
-        <input type="checkbox" id="redx" />
-        <span>Overlay a red &ldquo;X&rdquo; (classic Source debug look)</span>
-      </label>
-
-      <div class="presets">
-        <span class="presets-label">Preset size</span>
-        <div class="btn-row">
-          <button class="btn small" data-preset="256" type="button">256</button>
-          <button class="btn small" data-preset="512" type="button">512</button>
-          <button class="btn small" data-preset="1024" type="button">1024</button>
-          <button class="btn small" data-preset="4096" type="button">4096</button>
-        </div>
+      <div class="toggles">
+        <label class="check">
+          <input type="checkbox" id="swap" />
+          <span>B in top-left</span>
+        </label>
+        <label class="check">
+          <input type="checkbox" id="redx" />
+          <span>Red X</span>
+        </label>
       </div>
 
-      <div class="actions">
-        <button class="btn primary" id="download" type="button">&#11015; Download PNG</button>
-        <button class="btn" id="copy" type="button">&#128203; Copy to clipboard</button>
-        <button class="btn" id="reset" type="button">&#8634; Reset</button>
+      <div class="secondary">
+        <button class="ghost" id="copy" type="button">Copy</button>
+        <button class="ghost" id="reset" type="button">Reset</button>
       </div>
     </section>
 
-    <!-- ============ PREVIEW ============ -->
-    <section class="panel preview" aria-label="Live preview">
+    <section class="card preview" aria-label="Preview">
       <div class="preview-head">
-        <h2>Preview</h2>
-        <div class="readout">
-          <span id="readout" class="readout-item"></span>
-          <span id="sizeLabel" class="readout-item"></span>
-        </div>
+        <span class="label">Preview</span>
+        <span class="stats"><span id="readout"></span><span id="sizeLabel"></span></span>
       </div>
       <div class="canvas-wrap">
-        <canvas id="canvas" width="512" height="512" role="img" aria-label="Checkerboard preview"></canvas>
+        <canvas id="canvas" width="512" height="512" aria-label="Checkerboard preview"></canvas>
       </div>
       <p id="status" class="status" role="status" aria-live="polite"></p>
     </section>
-  </main>
 
-  <footer class="app-footer">
-    <span>Pure front-end &middot; no server &middot; generated in your browser</span>
-  </footer>
+    <div class="actions">
+      <button class="primary" id="download" type="button">Download PNG</button>
+    </div>
+  </div>
 
   <script src="index.js"></script>
 </body>
 </html>
-
